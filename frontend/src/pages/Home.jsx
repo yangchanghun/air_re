@@ -1,29 +1,31 @@
-import React, { useContext } from 'react';
+// src/pages/Home.jsx
+import React, { useContext, useEffect } from 'react';
 import styled from '@emotion/styled';
 import PageLayout from '../layouts/PageLayout';
 import Header from '../layouts/Header';
 import FlightInfo from '../components/FlightInfo';
 import SideBar from '../layouts/SideBar';
-import {
-  FlightInfoProvider,
-  FlightInfoContext,
-} from '../context/FlightInfoContext';
+import { FlightInfoContext } from '../context/FlightInfoContext';
 
 const Home = () => {
+  const { fetchFlights } = useContext(FlightInfoContext);
+
+  useEffect(() => {
+    fetchFlights();
+  }, []);
+
   return (
-    <FlightInfoProvider>
-      <PageLayout header={<Header />} aside={<SideBar />}>
-        <div style={{ height: '80%', padding: '20px 0' }}>
-          <FlightList />
-          <Pagination />
-        </div>
-      </PageLayout>
-    </FlightInfoProvider>
+    <PageLayout header={<Header />} aside={<SideBar />}>
+      <div style={{ height: '80%', padding: '20px 0' }}>
+        <FlightList />
+        <Pagination />
+      </div>
+    </PageLayout>
   );
 };
 
 const FlightList = () => {
-  const { flights } = useContext(FlightInfoContext);
+  const { flights = [] } = useContext(FlightInfoContext); // 기본값 빈 배열로 설정
   console.log(flights);
 
   return (
@@ -66,15 +68,21 @@ const PaginationButton = styled.button`
 `;
 
 const Pagination = () => {
-  const { currentPage, totalPages, setCurrentPage } =
+  const { currentPage, totalPages, setCurrentPage, fetchFlights } =
     useContext(FlightInfoContext);
 
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      fetchFlights(currentPage - 1);
+    }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      fetchFlights(currentPage + 1);
+    }
   };
 
   return (

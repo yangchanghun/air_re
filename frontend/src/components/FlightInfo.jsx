@@ -119,6 +119,7 @@ const FlightInfo = ({
   const { setSelectedFlight } = useContext(FlightInfoContext);
 
   const handleClick = () => {
+    console.log(setSelectedFlight);
     setSelectedFlight({
       id,
       departure,
@@ -155,31 +156,16 @@ const FlightInfo = ({
         <span>{arrival_time}</span>
         <span>{destination_airport}</span>
       </TimeInfo>
-      <AirlineInfo
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto',
-        }}
-      >
-        <img src={airline.logo} alt={`${airline.name} logo`} />
+      <AirlineInfo>
+        {airline.logo && (
+          <img src={airline.logo} alt={`${airline.name} logo`} />
+        )}
         <div>
-          <span>{airline}</span>
-          <span>
-            {airline.airline}
-            {flightClass}
-          </span>
+          <span>{airline.name || airline}</span>
+          <span>{flightClass}</span>
         </div>
       </AirlineInfo>
-      <PriceInfo
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto',
-        }}
-      >
+      <PriceInfo>
         <span>{formattedPrice} 원</span>
         <span>/ person</span>
       </PriceInfo>

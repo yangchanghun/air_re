@@ -1,3 +1,4 @@
+// src/layouts/Header.jsx
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -5,7 +6,7 @@ import { Avatar } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useDialog } from './Layout';
 import useDateFormat from '../hooks/useDateFormat';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance';
 import InputField from '../components/InputField';
 import DateDialog from '../components/DateDialog';
 import CountriesDialog from '../components/CountriesDialog';
@@ -145,15 +146,13 @@ const Header = () => {
 
     console.log(params);
 
-    const queryString = new URLSearchParams(params).toString();
-
-    console.log(queryString);
-
     try {
-      const response = await axios.get(
-        `http://localhost:8080/flights?${queryString}`
+      const response = await axiosInstance.get('/flights', { params });
+      updateSearchResults(
+        response.data.flights,
+        response.data.totalPages,
+        params
       );
-      updateSearchResults(response.data.flights, params);
       console.log('Data retrieved successfully:', response.data.flights);
     } catch (error) {
       toast.error('데이터를 가져오는 중 오류가 발생했습니다.');
@@ -257,6 +256,7 @@ const Header = () => {
             </Avatar>
           </div>
         </InputContainer>
+        <Link to={'/login'}> 로그인 | 회원가입</Link>
       </HeaderContainer>
       <ToastContainer
         position='bottom-right'
