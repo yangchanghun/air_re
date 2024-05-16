@@ -1,12 +1,10 @@
-// src/layouts/Header.jsx
 import { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Avatar } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { Avatar, IconButton, Button } from '@mui/material';
+import { Search, Clear } from '@mui/icons-material';
 import { useDialog } from './Layout';
 import useDateFormat from '../hooks/useDateFormat';
-import axiosInstance from '../api/axiosInstance';
 import InputField from '../components/InputField';
 import DateDialog from '../components/DateDialog';
 import CountriesDialog from '../components/CountriesDialog';
@@ -15,7 +13,7 @@ import ClassDialog from '../components/ClassDialog';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logo from '../assets/logo.png';
-import { FlightInfoContext } from '../context/FlightInfoContext';
+import { AuthContext } from '../context/AuthContext';
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -23,16 +21,16 @@ const HeaderContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 60px;
+  padding: 20px 60px;
+  background-color: #f8f8f8;
 `;
 
 const InputContainer = styled.div`
   display: flex;
   width: 80%;
-  height: 60px; /* 고정 높이 설정 */
   min-width: 500px;
   background-color: ${(props) => (props.activeField ? '#d9d9d9' : '#fff')};
-  gap: 2px;
+  gap: 10px;
   border-radius: 50px;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -41,13 +39,14 @@ const InputContainer = styled.div`
 
 const InputFieldWrapper = styled.div`
   flex: ${(props) => props.flex};
-  height: 100%; /* 높이를 부모 컨테이너에 맞춤 */
+  height: 100%;
   position: relative;
-  padding: 4px 10px 0 30px; /* 패딩 수정 */
+  padding: 10px 10px 0 20px;
   border-radius: 50px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   transition: box-shadow 0.3s ease, background-color 0.3s ease;
   cursor: text;
   background-color: ${(props) =>
@@ -71,6 +70,23 @@ const InputFieldWrapper = styled.div`
   }
 `;
 
+const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const ClearButton = styled(IconButton)`
+  margin-left: 10px;
+  color: #ff385c;
+  background-color: #fff;
+  border: 1px solid #ff385c;
+  &:hover {
+    background-color: #ff385c;
+    color: #fff;
+  }
+`;
+
 const Header = () => {
   const { openDialog, closeDialog } = useDialog();
   const [departure, setDeparture] = useState(null);
@@ -80,9 +96,10 @@ const Header = () => {
   const [flightClass, setFlightClass] = useState(null);
   const [airline, setAirline] = useState(null);
   const [activeField, setActiveField] = useState(null);
-  const { updateSearchResults } = useContext(FlightInfoContext);
-
+  const { authState, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
   const { formatDate } = useDateFormat();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenDialog = (field) => {
     setActiveField(field);
@@ -134,30 +151,51 @@ const Header = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    if (departure || destination) {
+      // 둘 다 입력되지 않은 경우
+      if (!departure || !destination) {
+        toast.error('출발지와 도착지를 모두 입력해주세요.');
+        return;
+      }
+      // 출발일 또는 도착일 중 하나만 입력된 경우
+      if ((departureDate && !arrivalDate) || (!departureDate && arrivalDate)) {
+        toast.error(
+          '출발일과 도착일을 모두 입력하거나, 모두 입력하지 않아야 합니다.'
+        );
+        return;
+      }
+    }
+
     const params = {
       ...(departure && { departures: departure }),
       ...(destination && { arrivals: destination }),
       ...(departureDate && { departure_date: formatDate(departureDate) }),
       ...(arrivalDate && { arrival_date: formatDate(arrivalDate) }),
       ...(flightClass && { flightClass: flightClass }),
-      ...(airline && { airline }),
+      ...(airline && { airline: airline }),
     };
 
-    console.log(params);
+    const queryString = new URLSearchParams(params).toString();
+    navigate(`/?${queryString}`);
+  };
 
-    try {
-      const response = await axiosInstance.get('/flights', { params });
-      updateSearchResults(
-        response.data.flights,
-        response.data.totalPages,
-        params
-      );
-      console.log('Data retrieved successfully:', response.data.flights);
-    } catch (error) {
-      toast.error('데이터를 가져오는 중 오류가 발생했습니다.');
-      console.error('Error retrieving data:', error);
-    }
+  const handleLogout = () => {
+    logout();
+    setIsModalOpen(true);
+    setTimeout(() => {
+      setIsModalOpen(false);
+      navigate('/');
+    }, 3000);
+  };
+
+  const handleClearFields = () => {
+    setDeparture(null);
+    setDestination(null);
+    setDepartureDate(null);
+    setArrivalDate(null);
+    setFlightClass(null);
+    setAirline(null);
   };
 
   return (
@@ -237,7 +275,9 @@ const Header = () => {
           </InputFieldWrapper>
           <div
             style={{
-              margin: '0 20px',
+              display: 'flex',
+              alignItems: 'center',
+              margin: '0 10px',
             }}
           >
             <Avatar
@@ -254,9 +294,23 @@ const Header = () => {
             >
               <Search />
             </Avatar>
+            <ClearButton onClick={handleClearFields}>
+              <Clear />
+            </ClearButton>
           </div>
         </InputContainer>
-        <Link to={'/login'}> 로그인 | 회원가입</Link>
+        {authState.isAuthenticated ? (
+          <ProfileSection>
+            <Button variant='text' color='inherit' onClick={handleLogout}>
+              Logout
+            </Button>
+            <Link to='/profile'>
+              <Avatar src='avatar.png' />
+            </Link>
+          </ProfileSection>
+        ) : (
+          <Link to={'/login'}> 로그인 | 회원가입</Link>
+        )}
       </HeaderContainer>
       <ToastContainer
         position='bottom-right'

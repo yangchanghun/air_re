@@ -1,56 +1,33 @@
 import styled from '@emotion/styled';
 
-const InputWrapper = styled.div`
+const InputFieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
+  justify-content: center;
   height: 100%;
-`;
-
-const StyledLabel = styled.label`
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-`;
-
-const StyledInput = styled.input`
   width: 100%;
-  border: none;
-  border-radius: 4px;
-  color: #333;
-  input-top: 10px;
-  background: transparent;
-  &::placeholder {
-    color: #aaa;
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+  padding: 10px 20px;
+  text-align: center; // 이 줄을 추가하여 텍스트를 가운데 정렬
+  cursor: pointer;
+  user-select: none;
 `;
 
-const InputField = ({
-  label,
-  type,
-  value,
-  onChange,
-  onClick,
-  placeholder,
-  readOnly,
-}) => (
-  <InputWrapper>
-    <StyledLabel>{label}</StyledLabel>
-    <StyledInput
-      type={type}
-      value={value}
-      onChange={onChange}
-      onClick={onClick}
-      placeholder={placeholder}
-      readOnly={readOnly}
-    />
-  </InputWrapper>
+const InputLabel = styled.label`
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+`;
+
+const InputValue = styled.div`
+  font-size: 16px;
+  color: #333;
+`;
+
+const InputField = ({ label, value, onClick, placeholder, readOnly }) => (
+  <InputFieldWrapper onClick={onClick}>
+    <InputLabel>{label}</InputLabel>
+    <InputValue>{value || placeholder}</InputValue>
+  </InputFieldWrapper>
 );
 
 export default InputField;

@@ -1,41 +1,83 @@
-// src/pages/Home.jsx
 import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import PageLayout from '../layouts/PageLayout';
 import Header from '../layouts/Header';
 import FlightInfo from '../components/FlightInfo';
 import SideBar from '../layouts/SideBar';
 import { FlightInfoContext } from '../context/FlightInfoContext';
+import { v4 as uuidv4 } from 'uuid';
+import queryString from 'query-string';
 
 const Home = () => {
-  const { fetchFlights } = useContext(FlightInfoContext);
+  const {
+    flights,
+    fetchFlights,
+    selectedFlight,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    searchParams,
+    setSearchParams,
+  } = useContext(FlightInfoContext);
+
+  const location = useLocation();
 
   useEffect(() => {
-    fetchFlights();
-  }, []);
+    const params = queryString.parse(location.search);
+    setSearchParams(params);
+    fetchFlights(1, 6, params); // 초기 검색 요청
+  }, [location.search, setSearchParams, fetchFlights]);
+
+  useEffect(() => {
+    fetchFlights(currentPage, 6, searchParams);
+  }, [currentPage, searchParams, fetchFlights]);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
-    <PageLayout header={<Header />} aside={<SideBar />}>
-      <div style={{ height: '80%', padding: '20px 0' }}>
-        <FlightList />
-        <Pagination />
-      </div>
+    <PageLayout header={<Header />} aside={<SideBar flight={selectedFlight} />}>
+      <ContentWrapper>
+        <FlightList flights={flights} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePrevious={handlePrevious}
+          handleNext={handleNext}
+        />
+      </ContentWrapper>
     </PageLayout>
   );
 };
 
-const FlightList = () => {
-  const { flights = [] } = useContext(FlightInfoContext); // 기본값 빈 배열로 설정
-  console.log(flights);
-
+const FlightList = ({ flights }) => {
   return (
     <>
       {flights.map((flight) => (
-        <FlightInfo key={flight.id} {...flight} />
+        <FlightInfo key={uuidv4()} {...flight} />
       ))}
     </>
   );
 };
+
+const ContentWrapper = styled.div`
+  height: 100%;
+  padding: 20px 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -45,6 +87,7 @@ const PaginationContainer = styled.div`
   color: white;
   border-radius: 10px;
   margin-top: 20px;
+  flex-wrap: wrap;
 `;
 
 const PaginationButton = styled.button`
@@ -52,10 +95,12 @@ const PaginationButton = styled.button`
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 10px 20px;
-  margin: 0 10px;
+  padding: 10px;
+  margin: 5px 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 100px;
+  text-align: center;
 
   &:disabled {
     background-color: #d9d9d9;
@@ -67,24 +112,12 @@ const PaginationButton = styled.button`
   }
 `;
 
-const Pagination = () => {
-  const { currentPage, totalPages, setCurrentPage, fetchFlights } =
-    useContext(FlightInfoContext);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      fetchFlights(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      fetchFlights(currentPage + 1);
-    }
-  };
-
+const Pagination = ({
+  currentPage,
+  totalPages,
+  handlePrevious,
+  handleNext,
+}) => {
   return (
     <PaginationContainer>
       <PaginationButton onClick={handlePrevious} disabled={currentPage === 1}>

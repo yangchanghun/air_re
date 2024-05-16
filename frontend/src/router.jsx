@@ -1,15 +1,25 @@
-/* eslint-disable react/jsx-no-undef */
 import { createBrowserRouter } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-
+import { motion } from 'framer-motion';
+import Profile from './pages/Profile';
+import FlightPage from './pages/FlightPage';
 const routerData = [
   {
     id: 0,
     path: '/',
     label: 'Home',
-    element: <Home />,
+    element: (
+      <motion.div
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 100 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Home />
+      </motion.div>
+    ),
     isAuth: false,
   },
   {
@@ -25,6 +35,20 @@ const routerData = [
     label: 'SignUp',
     element: <SignUp />,
     isAuth: false,
+  },
+  {
+    id: 3,
+    path: '/profile',
+    label: 'profile',
+    element: <Profile />,
+    isAuth: true,
+  },
+  {
+    id: 3,
+    path: '/test',
+    label: 'profile',
+    element: <FlightPage />,
+    isAuth: true,
   },
 ];
 

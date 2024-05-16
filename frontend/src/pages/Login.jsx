@@ -1,4 +1,4 @@
-// SignInSide.jsx
+// src/components/SignInSide.jsx
 import * as React from 'react';
 import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
@@ -40,7 +40,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
+export default function Lo() {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -51,16 +51,21 @@ export default function SignInSide() {
       email: data.get('email'),
       password: data.get('password'),
     };
+    console.log(credentials);
 
     try {
       const response = await axiosInstance.post('/login', credentials);
-      login(response.data.user, response.data.token);
+      const { token, user } = response.data;
+
+      // AuthContext를 사용하여 로그인 상태를 업데이트합니다.
+      login(user, token);
       toast.success('로그인 성공!');
-      setTimeout(() => {
-        navigate('/'); // 로그인 성공 후 홈 페이지로 리다이렉트
-      }, 2000);
+      navigate('/'); // 로그인 성공 후 홈 페이지로 리다이렉트
     } catch (error) {
-      toast.error('로그인 실패: ' + error.response.data.message);
+      toast.error(
+        '로그인 실패: ' + error.response?.data?.message ||
+          '알 수 없는 오류가 발생했습니다.'
+      );
     }
   };
 

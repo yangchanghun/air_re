@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import ReactPaginate from 'react-paginate';
 import styled from '@emotion/styled';
-import { FlightInfoContext } from '../context/FlightInfoContext';
 
 const PaginationContainer = styled.div`
   display: flex;
@@ -10,60 +10,56 @@ const PaginationContainer = styled.div`
   color: white;
   border-radius: 10px;
   margin-top: 20px;
+  flex-wrap: wrap;
 `;
 
-const PaginationButton = styled.button`
-  background-color: #ff385c;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  margin: 0 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+const StyledReactPaginate = styled(ReactPaginate)`
+  display: flex;
+  list-style: none;
+  padding: 0;
 
-  &:disabled {
-    background-color: #d9d9d9;
-    cursor: not-allowed;
+  li {
+    margin: 0 5px;
+    cursor: pointer;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    &.selected {
+      font-weight: bold;
+    }
   }
 
-  &:hover:not(:disabled) {
-    background-color: #ff5773;
+  a {
+    padding: 8px 12px;
+    background-color: #ff385c;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #ff5773;
+    }
   }
 `;
 
-const Pagination = () => {
-  const { currentPage, totalPages, setCurrentPage } =
-    useContext(FlightInfoContext);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  return (
-    <PaginationContainer>
-      <PaginationButton onClick={handlePrevious} disabled={currentPage === 1}>
-        Previous
-      </PaginationButton>
-      <span style={{ color: 'black' }}>
-        {currentPage} of {totalPages}
-      </span>
-      <PaginationButton
-        onClick={handleNext}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </PaginationButton>
-    </PaginationContainer>
-  );
-};
+const Pagination = ({ currentPage, totalPages, onPageChange }) => (
+  <PaginationContainer>
+    <StyledReactPaginate
+      pageCount={totalPages}
+      pageRangeDisplayed={2}
+      marginPagesDisplayed={1}
+      onPageChange={(data) => onPageChange(data.selected + 1)}
+      containerClassName={'pagination'}
+      activeClassName={'selected'}
+      previousLabel={'Previous'}
+      nextLabel={'Next'}
+      breakLabel={'...'}
+    />
+  </PaginationContainer>
+);
 
 export default Pagination;

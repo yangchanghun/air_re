@@ -1,4 +1,5 @@
-import { useContext } from 'react';
+// src/components/FlightInfo.jsx
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
 import { RiFlightLandFill, RiFlightTakeoffFill } from 'react-icons/ri';
 import { FlightInfoContext } from '../context/FlightInfoContext';
@@ -119,7 +120,6 @@ const FlightInfo = ({
   const { setSelectedFlight } = useContext(FlightInfoContext);
 
   const handleClick = () => {
-    console.log(setSelectedFlight);
     setSelectedFlight({
       id,
       departure,
@@ -137,7 +137,7 @@ const FlightInfo = ({
     });
   };
 
-  const formattedPrice = price.toLocaleString();
+  const formattedPrice = price !== undefined ? price.toLocaleString() : 'N/A';
 
   return (
     <FlightContainer onClick={handleClick}>
@@ -157,9 +157,6 @@ const FlightInfo = ({
         <span>{destination_airport}</span>
       </TimeInfo>
       <AirlineInfo>
-        {airline.logo && (
-          <img src={airline.logo} alt={`${airline.name} logo`} />
-        )}
         <div>
           <span>{airline.name || airline}</span>
           <span>{flightClass}</span>
