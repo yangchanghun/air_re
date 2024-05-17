@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactPaginate from 'react-paginate';
 import styled from '@emotion/styled';
 
@@ -46,7 +45,7 @@ const StyledReactPaginate = styled(ReactPaginate)`
   }
 `;
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => (
+const Pagination = ({ totalPages, onPageChange }) => (
   <PaginationContainer>
     <StyledReactPaginate
       pageCount={totalPages}

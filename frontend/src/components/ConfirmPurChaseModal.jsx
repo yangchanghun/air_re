@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Box, Typography, Button } from '@mui/material';
 import styled from '@emotion/styled';
 

@@ -1,12 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import PropTypes from 'prop-types';
 import { useState, useContext } from 'react';
 import ConfirmPurchaseModal from '../components/ConfirmPurChaseModal';
 import { FlightInfoContext } from '../context/FlightInfoContext';
-import { AuthContext } from '../context/AuthContext'; // Add this import
-import { toast } from 'react-toastify';
+import { AuthContext } from '../context/AuthContext'; 
 
 const Container = styled.div`
   display: flex;
@@ -105,8 +102,8 @@ const BookButton = styled.button`
 `;
 
 const SideBar = ({ flight }) => {
-  const { purchaseTicket } = useContext(FlightInfoContext); // Add this line to get purchaseTicket
-  const { authState } = useContext(AuthContext); // Add this line to get authState
+  const { purchaseTicket } = useContext(FlightInfoContext); 
+  const { authState } = useContext(AuthContext); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -119,7 +116,7 @@ const SideBar = ({ flight }) => {
 
   const handleConfirmPurchase = async () => {
     try {
-      await purchaseTicket(flight.id, authState.user.id); // Pass userId as well
+      await purchaseTicket(flight.id, authState.user.id);
       handleCloseModal();
     } catch (error) {
       console.error('Failed to purchase ticket', error);

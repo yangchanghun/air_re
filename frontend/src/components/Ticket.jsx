@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import { useState, forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { Typography, Button } from '@mui/material';
 import { RiFlightLandFill, RiFlightTakeoffFill } from 'react-icons/ri';
@@ -7,7 +7,6 @@ import {
   MdOutlineLiveTv,
   MdOutlineUsb,
   MdWifi,
-  MdSearch,
 } from 'react-icons/md';
 import ConfirmModal from './ConfirmModal';
 import dayjs from 'dayjs';
@@ -106,7 +105,6 @@ const Ticket = forwardRef((props, ref) => {
     departure_time,
     arrival_time,
     duration,
-    airline,
     flightClass,
     price,
     handleRefund,

@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   createContext,
   useState,
@@ -80,7 +80,7 @@ export const FlightInfoProvider = ({ children }) => {
 
   const purchaseTicket = useCallback(
     async (flightId, userId) => {
-      if (isSubmittingRef.current) return; // Prevent duplicate submissions
+      if (isSubmittingRef.current) return;
       isSubmittingRef.current = true;
       console.log('isSubmitting set to true');
       try {
@@ -99,7 +99,7 @@ export const FlightInfoProvider = ({ children }) => {
 
         if (response.status === 200 || response.status === 201) {
           toast.success('구매 완료', { toastId: 'purchase-success' });
-          await fetchUserTickets(1); // 티켓 구매 후 첫 페이지의 티켓 목록을 업데이트
+          await fetchUserTickets(1);
         } else {
           toast.error('구매 실패', { toastId: 'purchase-failure' });
         }
@@ -107,7 +107,7 @@ export const FlightInfoProvider = ({ children }) => {
         toast.error('구매 실패', { toastId: 'purchase-error' });
         console.error('Failed to purchase ticket', error);
       } finally {
-        isSubmittingRef.current = false; // Reset isSubmitting state
+        isSubmittingRef.current = false;
         console.log('isSubmitting set to false');
       }
     },
@@ -137,7 +137,7 @@ export const FlightInfoProvider = ({ children }) => {
         purchaseTicket,
         setTickets,
         searchParams,
-        setSearchParams, // 추가된 부분
+        setSearchParams,
       }}
     >
       {children}

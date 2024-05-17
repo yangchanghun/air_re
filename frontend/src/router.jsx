@@ -4,7 +4,7 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import { motion } from 'framer-motion';
 import Profile from './pages/Profile';
-import FlightPage from './pages/FlightPage';
+
 const routerData = [
   {
     id: 0,
@@ -41,13 +41,6 @@ const routerData = [
     path: '/profile',
     label: 'profile',
     element: <Profile />,
-    isAuth: true,
-  },
-  {
-    id: 3,
-    path: '/test',
-    label: 'profile',
-    element: <FlightPage />,
     isAuth: true,
   },
 ];

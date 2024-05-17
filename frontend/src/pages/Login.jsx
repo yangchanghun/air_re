@@ -57,10 +57,10 @@ export default function Lo() {
       const response = await axiosInstance.post('/login', credentials);
       const { token, user } = response.data;
 
-      // AuthContext를 사용하여 로그인 상태를 업데이트합니다.
+     
       login(user, token);
       toast.success('로그인 성공!');
-      navigate('/'); // 로그인 성공 후 홈 페이지로 리다이렉트
+      navigate('/'); 
     } catch (error) {
       toast.error(
         '로그인 실패: ' + error.response?.data?.message ||

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -53,12 +53,12 @@ export default function SignUp() {
     };
 
     try {
-      const response = await axiosInstance.post('/signup', user); // Adjust the path if necessary
-      login(response.data); // Assume the API returns user data on successful signup
+      const response = await axiosInstance.post('/signup', user); 
+      login(response.data);
       toast.success('Sign up successful! Redirecting to login page...');
       setTimeout(() => {
         navigate('/login');
-      }, 2000); // Redirect after 2 seconds to allow user to see the toast
+      }, 2000);
     } catch (error) {
       toast.error('Error signing up. Please try again.');
       console.error('Error signing up:', error);

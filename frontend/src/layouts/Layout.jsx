@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import React, { useContext, createContext, useState } from 'react';
+import { useContext, createContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Backdrop from '../components/Backdrop';
 

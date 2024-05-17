@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -23,14 +22,14 @@ const continents = [
 ];
 
 const CustomAccordion = styled(Accordion)({
-  boxShadow: 'none', // Remove shadow
+  boxShadow: 'none',
   '&:before': {
-    display: 'none', // Remove the bottom border line
+    display: 'none',
   },
 });
 
 const CustomAccordionSummary = styled(AccordionSummary)({
-  boxShadow: 'none', // Remove shadow
+  boxShadow: 'none',
 });
 
 const Countries = ({ onCountrySelect, activeInput }) => {
@@ -49,7 +48,6 @@ const Countries = ({ onCountrySelect, activeInput }) => {
 
   return (
     <div>
-      {/* activeInput에 따라 상단에 문구 표시 */}
       <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>
         {activeInput === 'departure' ? '출발지 선택' : '도착지 선택'}
       </div>

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Avatar, IconButton, Button } from '@mui/material';
+import { Avatar, Button } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { useDialog } from './Layout';
 import useDateFormat from '../hooks/useDateFormat';
@@ -76,7 +76,7 @@ const Header = () => {
   const [flightClass, setFlightClass] = useState(null);
   const [airline, setAirline] = useState(null);
   const [activeField, setActiveField] = useState(null);
-  const [hoverIndex, setHoverIndex] = useState(null); // hover 상태를 관리하는 상태
+  const [hoverIndex, setHoverIndex] = useState(null);
   const { authState, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { formatDate } = useDateFormat();
@@ -134,12 +134,12 @@ const Header = () => {
 
   const handleSubmit = () => {
     if (departure || destination) {
-      // 둘 다 입력되지 않은 경우
+
       if (!departure || !destination) {
         toast.error('출발지와 도착지를 모두 입력해주세요.');
         return;
       }
-      // 출발일 또는 도착일 중 하나만 입력된 경우
+
       if ((departureDate && !arrivalDate) || (!departureDate && arrivalDate)) {
         toast.error(
           '출발일과 도착일을 모두 입력하거나, 모두 입력하지 않아야 합니다.'

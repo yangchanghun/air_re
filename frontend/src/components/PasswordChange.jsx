@@ -1,5 +1,5 @@
 // src/components/PasswordChange.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { TextField, Button, Typography } from '@mui/material';
 import axiosInstance from '../api/axiosInstance';

@@ -9,18 +9,18 @@ import {
   Alert,
 } from '@mui/material';
 import Countries from './Countries';
-import useValidation from '../hooks/useValidation'; // useValidation Hook import
+import useValidation from '../hooks/useValidation';
 
 const CountriesDialog = ({
   open,
   onClose,
   title,
-  setDeparture, // Prop 이름 수정
-  setDestination, // Prop 이름 수정
+  setDeparture,
+  setDestination,
 }) => {
   const [departureValue, setDepartureValue] = useState('');
   const [arrivalValue, setArrivalValue] = useState('');
-  const [activeInput, setActiveInput] = useState(null); // 활성 입력 필드 상태 추가
+  const [activeInput, setActiveInput] = useState(null);
 
   const validateCountries = (departure, arrival) => {
     if (!departure || !arrival) {
@@ -69,7 +69,7 @@ const CountriesDialog = ({
             type='text'
             fullWidth
             value={departureValue}
-            onFocus={() => setActiveInput('departure')} // 포커스 이벤트 추가
+            onFocus={() => setActiveInput('departure')}
             onChange={(e) => setDepartureValue(e.target.value)}
           />
           <TextField
@@ -79,7 +79,7 @@ const CountriesDialog = ({
             type='text'
             fullWidth
             value={arrivalValue}
-            onFocus={() => setActiveInput('arrival')} // 포커스 이벤트 추가
+            onFocus={() => setActiveInput('arrival')}
             onChange={(e) => setArrivalValue(e.target.value)}
           />
           {error && <Alert severity='error'>{error}</Alert>}

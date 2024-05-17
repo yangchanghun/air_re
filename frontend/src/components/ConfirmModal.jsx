@@ -1,5 +1,4 @@
 // ConfirmModal.js
-import React from 'react';
 import { Modal, Typography, Button, Box } from '@mui/material';
 import styled from '@emotion/styled';
 

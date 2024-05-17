@@ -1,5 +1,5 @@
 // src/pages/Loading.jsx
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import { LoadingContext } from '../context/LoadingContext';
@@ -79,7 +79,7 @@ const Loading = () => {
         setProgress((prevProgress) =>
           prevProgress < 100 ? prevProgress + 1 : 100
         );
-      }, 30); // 3초 동안 프로그레스 바 진행
+      }, 30);
 
       return () => clearInterval(interval);
     }

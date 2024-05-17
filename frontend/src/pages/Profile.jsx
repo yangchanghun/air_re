@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { AuthContext } from '../context/AuthContext';
 import { FlightInfoContext } from '../context/FlightInfoContext';
@@ -17,8 +17,6 @@ const Profile = () => {
   const {
     fetchUserTickets,
     tickets,
-    currentPage,
-    totalPages,
     setCurrentPage,
     setTickets,
   } = useContext(FlightInfoContext);

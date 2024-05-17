@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 const ClassDialog = ({ open, onClose, setFlightClass }) => {
-  const classes = ['이코노미', '비즈니스', '퍼스트클래스']; // 클래스 리스트
+  const classes = ['이코노미', '비즈니스', '퍼스트클래스'];
 
   return (
     <MuiDialog open={open} onClose={onClose}>

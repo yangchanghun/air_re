@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import Ticket from './Ticket';
 import { v4 as uuidv4 } from 'uuid';

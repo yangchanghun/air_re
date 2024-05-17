@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import styled from '@emotion/styled';
 import PageLayout from '../layouts/PageLayout';
@@ -26,7 +26,7 @@ const Home = () => {
   useEffect(() => {
     const params = queryString.parse(location.search);
     setSearchParams(params);
-    fetchFlights(1, 6, params); // 초기 검색 요청
+    fetchFlights(1, 6, params); 
   }, [location.search, setSearchParams, fetchFlights]);
 
   useEffect(() => {

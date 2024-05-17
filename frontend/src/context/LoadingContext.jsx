@@ -1,5 +1,5 @@
 // src/context/LoadingContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import america from '../assets/america.png';
 import france from '../assets/france.png';
 import germany from '../assets/germany.png';
