@@ -2,10 +2,9 @@ import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Avatar, IconButton, Button } from '@mui/material';
-import { Search, Clear } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { useDialog } from './Layout';
 import useDateFormat from '../hooks/useDateFormat';
-import InputField from '../components/InputField';
 import DateDialog from '../components/DateDialog';
 import CountriesDialog from '../components/CountriesDialog';
 import AirlineDialog from '../components/AirlineDialog';
@@ -22,15 +21,13 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 20px 60px;
-  background-color: #f8f8f8;
 `;
 
 const InputContainer = styled.div`
   display: flex;
   width: 80%;
   min-width: 500px;
-  background-color: ${(props) => (props.activeField ? '#d9d9d9' : '#fff')};
-  gap: 10px;
+  background-color: #fff;
   border-radius: 50px;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -38,53 +35,36 @@ const InputContainer = styled.div`
 `;
 
 const InputFieldWrapper = styled.div`
-  flex: ${(props) => props.flex};
-  height: 100%;
-  position: relative;
-  padding: 10px 10px 0 20px;
-  border-radius: 50px;
+  flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-  cursor: text;
-  background-color: ${(props) =>
-    props.active || !props.activeField ? '#fff' : '#d9d9d9'};
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
 
-  &:first-of-type {
-    margin-left: 0;
-    border-top-left-radius: 50px;
-    border-bottom-left-radius: 50px;
-  }
-
-  &:last-of-type {
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
-  }
-
-  &:focus-within,
   &:hover {
-    box-shadow: 0 0 0 2px #ff385c;
-    background-color: #fff;
+    background-color: #f1f1f1;
+    border-radius: 50px;
+    border-right: none;
   }
+`;
+
+const Label = styled.label`
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+const Value = styled.div`
+  font-size: 12px;
+  color: #888;
 `;
 
 const ProfileSection = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
-
-const ClearButton = styled(IconButton)`
-  margin-left: 10px;
-  color: #ff385c;
-  background-color: #fff;
-  border: 1px solid #ff385c;
-  &:hover {
-    background-color: #ff385c;
-    color: #fff;
-  }
 `;
 
 const Header = () => {
@@ -96,6 +76,7 @@ const Header = () => {
   const [flightClass, setFlightClass] = useState(null);
   const [airline, setAirline] = useState(null);
   const [activeField, setActiveField] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState(null); // hover 상태를 관리하는 상태
   const { authState, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const { formatDate } = useDateFormat();
@@ -109,7 +90,7 @@ const Header = () => {
           <CountriesDialog
             open={true}
             onClose={() => closeDialog()}
-            title='출발지 및 도착지 선택'
+            title='여행 장소'
             setDeparture={setDeparture}
             setDestination={setDestination}
           />
@@ -120,7 +101,7 @@ const Header = () => {
           <DateDialog
             open={true}
             onClose={() => closeDialog()}
-            title='출발일 및 도착일 선택'
+            title='여행 기간'
             departureDate={departureDate}
             arrivalDate={arrivalDate}
             setDepartureDate={setDepartureDate}
@@ -204,81 +185,45 @@ const Header = () => {
         <Link to={'/'}>
           <img src={logo} alt='홈으로' style={{ height: '40px' }} />
         </Link>
-        <InputContainer activeField={activeField}>
-          <InputFieldWrapper
-            flex='1.5'
-            active={activeField === 'locations'}
-            activeField={activeField}
-            onClick={() => handleOpenDialog('locations')}
-            onMouseEnter={() => setActiveField('locations')}
-            onMouseLeave={() => setActiveField(null)}
-          >
-            <InputField
-              label='출발지 및 도착지 선택'
-              placeholder='출발지와 도착지를 선택해주세요'
-              value={`${departure ? departure.toString() : '출발지'} - ${
-                destination ? destination.toString() : '도착지'
-              }`}
-              onClick={() => handleOpenDialog('locations')}
-              readOnly
-            />
-          </InputFieldWrapper>
-          <InputFieldWrapper
-            flex='1.5'
-            active={activeField === 'dates'}
-            activeField={activeField}
-            onClick={() => handleOpenDialog('dates')}
-            onMouseEnter={() => setActiveField('dates')}
-            onMouseLeave={() => setActiveField(null)}
-          >
-            <InputField
-              label='출발일 및 도착일 선택'
-              placeholder='출발일과 도착일을 선택해주세요'
-              value={`${
-                departureDate ? formatDate(departureDate) : 'YYYY-MM-DD'
-              } - ${arrivalDate ? formatDate(arrivalDate) : 'YYYY-MM-DD'}`}
-              onClick={() => handleOpenDialog('dates')}
-              readOnly
-            />
-          </InputFieldWrapper>
-          <InputFieldWrapper
-            flex='1.5'
-            active={activeField === 'airlines'}
-            activeField={activeField}
-            onClick={() => handleOpenDialog('airlines')}
-            onMouseEnter={() => setActiveField('airlines')}
-            onMouseLeave={() => setActiveField(null)}
-          >
-            <InputField
-              label='항공사 선택'
-              placeholder='항공사를 선택해주세요'
-              value={`${airline ? airline.toString() : '항공사'}`}
-              onClick={() => handleOpenDialog('airlines')}
-              readOnly
-            />
-          </InputFieldWrapper>
-          <InputFieldWrapper
-            flex='1.5'
-            active={activeField === 'classes'}
-            activeField={activeField}
-            onClick={() => handleOpenDialog('classes')}
-            onMouseEnter={() => setActiveField('classes')}
-            onMouseLeave={() => setActiveField(null)}
-          >
-            <InputField
-              label='클래스 선택'
-              placeholder='클래스를 선택해주세요'
-              value={`${flightClass ? flightClass.toString() : '클래스'}`}
-              onClick={() => handleOpenDialog('classes')}
-              readOnly
-            />
-          </InputFieldWrapper>
+        <InputContainer>
+          {['locations', 'dates', 'airlines', 'classes'].map((field, index) => (
+            <InputFieldWrapper
+              key={field}
+              onClick={() => handleOpenDialog(field)}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+              className={hoverIndex === index - 1 ? 'no-border-right' : ''}
+            >
+              <Label>
+                {field === 'locations'
+                  ? '출발 / 도착'
+                  : field === 'dates'
+                  ? '여행 기간'
+                  : field === 'airlines'
+                  ? '항공사'
+                  : '좌석'}
+              </Label>
+              <Value>
+                {field === 'locations'
+                  ? `${departure ? departure : '출발지 검색'} / ${
+                      destination ? destination : '도착지 검색'
+                    }`
+                  : field === 'dates'
+                  ? `${
+                      departureDate ? formatDate(departureDate) : '날짜 추가'
+                    } - ${arrivalDate ? formatDate(arrivalDate) : '날짜 추가'}`
+                  : field === 'airlines'
+                  ? airline
+                    ? airline
+                    : '항공사 선택'
+                  : flightClass
+                  ? flightClass
+                  : '좌석 선택'}
+              </Value>
+            </InputFieldWrapper>
+          ))}
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              margin: '0 10px',
-            }}
+            style={{ display: 'flex', alignItems: 'center', padding: '0 10px' }}
           >
             <Avatar
               sx={{
@@ -294,9 +239,6 @@ const Header = () => {
             >
               <Search />
             </Avatar>
-            <ClearButton onClick={handleClearFields}>
-              <Clear />
-            </ClearButton>
           </div>
         </InputContainer>
         {authState.isAuthenticated ? (
