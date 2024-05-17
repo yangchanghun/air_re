@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { Avatar, Button } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { Avatar, Button, IconButton } from '@mui/material';
+import { Search, Delete } from '@mui/icons-material';
 import { useDialog } from './Layout';
 import useDateFormat from '../hooks/useDateFormat';
 import DateDialog from '../components/DateDialog';
@@ -43,6 +43,7 @@ const InputFieldWrapper = styled.div`
   padding: 10px;
   text-align: center;
   cursor: pointer;
+  position: relative;
 
   &:hover {
     background-color: #f1f1f1;
@@ -59,6 +60,14 @@ const Label = styled.label`
 const Value = styled.div`
   font-size: 12px;
   color: #888;
+`;
+
+const DeleteButton = styled(IconButton)`
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  padding: 5px;
 `;
 
 const ProfileSection = styled.div`
@@ -134,7 +143,6 @@ const Header = () => {
 
   const handleSubmit = () => {
     if (departure || destination) {
-
       if (!departure || !destination) {
         toast.error('출발지와 도착지를 모두 입력해주세요.');
         return;
@@ -170,13 +178,25 @@ const Header = () => {
     }, 3000);
   };
 
-  const handleClearFields = () => {
-    setDeparture(null);
-    setDestination(null);
-    setDepartureDate(null);
-    setArrivalDate(null);
-    setFlightClass(null);
-    setAirline(null);
+  const handleClearField = (field) => {
+    switch (field) {
+      case 'locations':
+        setDeparture(null);
+        setDestination(null);
+        break;
+      case 'dates':
+        setDepartureDate(null);
+        setArrivalDate(null);
+        break;
+      case 'airlines':
+        setAirline(null);
+        break;
+      case 'classes':
+        setFlightClass(null);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -220,6 +240,20 @@ const Header = () => {
                   ? flightClass
                   : '좌석 선택'}
               </Value>
+              {((field === 'locations' && (departure || destination)) ||
+                (field === 'dates' && (departureDate || arrivalDate)) ||
+                (field === 'airlines' && airline) ||
+                (field === 'classes' && flightClass)) && (
+                <DeleteButton
+                  size='small'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearField(field);
+                  }}
+                >
+                  <Delete fontSize='small' />
+                </DeleteButton>
+              )}
             </InputFieldWrapper>
           ))}
           <div
