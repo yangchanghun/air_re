@@ -1,8 +1,7 @@
-import { useContext, useEffect } from 'react';
+import { useContext,} from 'react';
 import styled from '@emotion/styled';
 import { RiFlightLandFill, RiFlightTakeoffFill } from 'react-icons/ri';
 import { FlightInfoContext } from '../context/FlightInfoContext';
-import useGenerateGateNum from '../hooks/useGenerateGateNum';
 
 const FlightContainer = styled.div`
   display: flex;
