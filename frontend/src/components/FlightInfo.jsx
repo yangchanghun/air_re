@@ -1,8 +1,8 @@
-// src/components/FlightInfo.jsx
-import React, { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { RiFlightLandFill, RiFlightTakeoffFill } from 'react-icons/ri';
 import { FlightInfoContext } from '../context/FlightInfoContext';
+import useGenerateGateNum from '../hooks/useGenerateGateNum';
 
 const FlightContainer = styled.div`
   display: flex;
@@ -15,6 +15,12 @@ const FlightContainer = styled.div`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   width: 100%;
+
+  @media (max-width: 950px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
 `;
 
 const TimeInfo = styled.div`
@@ -33,6 +39,18 @@ const TimeInfo = styled.div`
   span:last-of-type {
     font-size: 16px;
     color: #666;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+
+    span:first-of-type,
+    span:last-of-type {
+      font-size: 14px;
+    }
   }
 `;
 
@@ -55,6 +73,18 @@ const DurationInfo = styled.div`
     border-top: 1px solid #999;
     margin: 0 10px;
   }
+
+  @media (max-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin: 10px 0;
+
+    span,
+    hr {
+      display: none;
+    }
+  }
 `;
 
 const PriceInfo = styled.div`
@@ -72,6 +102,17 @@ const PriceInfo = styled.div`
   span:last-of-type {
     font-size: 16px;
     color: #666;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+
+    span:first-of-type,
+    span:last-of-type {
+      font-size: 14px;
+    }
   }
 `;
 
@@ -100,6 +141,24 @@ const AirlineInfo = styled.div`
       color: #999;
     }
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 5px;
+
+    div {
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    span:first-of-type,
+    span:last-of-type {
+      font-size: 14px;
+    }
+  }
 `;
 
 const FlightInfo = ({
@@ -109,9 +168,9 @@ const FlightInfo = ({
   destination,
   destination_airport,
   departure_date,
-  arrival_date,
+  destination_date,
   departure_time,
-  arrival_time,
+  destination_time,
   duration,
   airline,
   flightClass,
@@ -127,9 +186,9 @@ const FlightInfo = ({
       destination,
       destination_airport,
       departure_date,
-      arrival_date,
+      destination_date,
       departure_time,
-      arrival_time,
+      destination_time,
       duration,
       airline,
       flightClass,
@@ -153,7 +212,7 @@ const FlightInfo = ({
         <RiFlightLandFill style={{ width: '24px', height: '24px' }} />
       </DurationInfo>
       <TimeInfo>
-        <span>{arrival_time}</span>
+        <span>{destination_time}</span>
         <span>{destination_airport}</span>
       </TimeInfo>
       <AirlineInfo>
